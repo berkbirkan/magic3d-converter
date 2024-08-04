@@ -42,18 +42,10 @@ def convert_file():
     output_ply_file_path = os.path.join(UPLOAD_FOLDER, output_ply_file_name)
     thumbnail_file_path = os.path.join(UPLOAD_FOLDER, thumbnail_file_name)
 
-    username = 'berkbirkan_wadJv'
-    password = 'Brkbrkn840_~+='
-    location = 'TR'
-    proxy_entry = f'http://customer-{username}-cc-{location}:{password}@pr.oxylabs.io:7777'
-    proxies = {
-            "http": proxy_entry,
-            "https": proxy_entry
-    }
 
 
     try:
-        response = requests.get(url, proxies=proxies)
+        response = requests.get(url)
         response.raise_for_status()
         with open(temp_file_path, 'wb') as f:
             f.write(response.content)
