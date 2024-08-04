@@ -6,4 +6,4 @@ services:
     ports:
       - "8889:8889"
     volumes:
-      - .:/app
+      - ./assets:/app/assets
