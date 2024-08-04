@@ -42,12 +42,14 @@ def convert_file():
     output_ply_file_path = os.path.join(UPLOAD_FOLDER, output_ply_file_name)
     thumbnail_file_path = os.path.join(UPLOAD_FOLDER, thumbnail_file_name)
 
-    response = requests.get(url)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
         with open(temp_file_path, 'wb') as f:
             f.write(response.content)
-    else:
-        return jsonify({"error": "Could not download file from URL."}), 400
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading file: {e}")
+        return jsonify({"error": f"Could not download file from URL. {e}"}), 400
 
     try:
         mesh = trimesh.load(temp_file_path)
