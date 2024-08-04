@@ -44,7 +44,7 @@ def convert_file():
 
     username = 'berkbirkan_wadJv'
     password = 'Brkbrkn840_~+='
-    location = 'US'
+    location = 'TR'
     proxy_entry = f'http://customer-{username}-cc-{location}:{password}@pr.oxylabs.io:7777'
     proxies = {
             "http": proxy_entry,
