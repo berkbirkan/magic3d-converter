@@ -43,7 +43,8 @@ def convert_file():
     thumbnail_file_path = os.path.join(UPLOAD_FOLDER, thumbnail_file_name)
 
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
 
     try:
         response = requests.get(url, headers=headers)
