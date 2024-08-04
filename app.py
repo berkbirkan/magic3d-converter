@@ -56,7 +56,7 @@ def convert_file():
     }
 
     try:
-        response = requests.get(url, headers=headers,proxies=proxy_entry)
+        response = requests.get(url, headers=headers,proxies=proxies)
         response.raise_for_status()
         with open(temp_file_path, 'wb') as f:
             f.write(response.content)
