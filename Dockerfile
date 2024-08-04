@@ -51,6 +51,9 @@ RUN apt-get update && apt-get install -y \
 # Install Node.js and npm
 RUN apt-get update && apt-get install -y nodejs npm
 
+# Set environment variable to skip downloading Chromium
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+
 # Install screenshot-glb
 RUN npm install -g @shopify/screenshot-glb
 
