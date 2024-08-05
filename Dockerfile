@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies for screenshot-glb
+# Install system dependencies for screenshot-glb and Chromium
 RUN apt-get update && apt-get install -y \
     sudo \
     wget \
@@ -54,8 +54,10 @@ RUN apt-get update && apt-get install -y nodejs npm
 # Set environment variable to skip downloading Chromium
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
-# Install screenshot-glb
+# Install screenshot-glb and the required Chromium version
 RUN npm install -g @shopify/screenshot-glb
+RUN npm install puppeteer@10.0.0
+RUN npx puppeteer install
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt requirements.txt
