@@ -1,15 +1,20 @@
-# syntax=docker/dockerfile:1
-
-FROM debian:buster-slim
+# Use the official Python image from the Docker Hub
 FROM python:3.9-slim
 
-# replace shell with bash so we can source files
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+# Set environment variables to prevent Python from writing .pyc files and to buffer output
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# install dependencies
-RUN apt-get update \
-    && apt-get install -y \
-    curl \
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    gconf-service \
     libasound2 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
@@ -48,54 +53,17 @@ RUN apt-get update \
     lsb-release \
     xdg-utils \
     wget \
-    chromium \
-    python3 \
-    python3-pip \
-    && apt-get -y autoclean
+    chromium && \
+    rm -rf /var/lib/apt/lists/*
 
-# nvm environment variables (-> lts/gallium)
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 18.17.0
-RUN mkdir -p ${NVM_DIR}
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# install nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# Install screenshot-glb
+RUN npm install -g screenshot-glb
 
-RUN source ${NVM_DIR}/nvm.sh \
-    && nvm install ${NODE_VERSION} \
-    && nvm alias default ${NODE_VERSION} \
-    && nvm use default
-
-# add node and npm to path so the commands are available
-ENV NODE_BASEDIR ${NVM_DIR}/versions/node/v${NODE_VERSION}
-ENV NODE_PATH ${NODE_BASEDIR}/lib/node_modules
-ENV PATH ${NODE_BASEDIR}/bin:$PATH
-
-# confirm installation
-RUN node -v
-RUN npm -v
-
-# set puppeteer environment variables
-ENV PUPPETEER_SKIP_DOWNLOAD true
-
-# install screenshot-glb and puppeteer
-RUN npm install -g @shopify/screenshot-glb puppeteer
-
-# specify puppeteer to use the installed Chromium
-RUN npx puppeteer install
-
-# setting up the cache directory for puppeteer
-ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
-
-# install python dependencies
-COPY requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# copy the rest of the application to the container
-COPY . .
-
-# expose the port that the Flask app will run on
+# Expose port 8889 for the Flask app
 EXPOSE 8889
 
-# define the command to run the application
+# Run the application
 CMD ["python", "app.py"]
