@@ -4,10 +4,11 @@ FROM python:3.9-slim
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies for screenshot-glb and Chromium
+# Install system dependencies for Chromium
 RUN apt-get update && apt-get install -y \
     sudo \
     wget \
+    gnupg \
     gconf-service \
     libasound2 \
     libatk1.0-0 \
@@ -48,12 +49,15 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Chromium
+RUN apt-get update && apt-get install -y \
+    chromium
+
 # Install Node.js and npm
 RUN apt-get update && apt-get install -y nodejs npm
 
-# Install screenshot-glb and the required Chromium version
-RUN npm install -g @shopify/screenshot-glb
-RUN npm install puppeteer
+# Install screenshot-glb and Puppeteer
+RUN npm install -g @shopify/screenshot-glb puppeteer
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt requirements.txt
