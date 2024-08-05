@@ -98,4 +98,4 @@ COPY . .
 EXPOSE 8889
 
 # define the command to run the application
-CMD ["python3", "app.py"]
+CMD ["python", "app.py"]
