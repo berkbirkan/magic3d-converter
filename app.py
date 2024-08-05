@@ -22,6 +22,8 @@ def glb_to_png(glb_path, png_path):
 def generate_unique_filename(extension):
     random_prefix = random.randint(1000, 9999)
     return f"model_{random_prefix}.{extension}"
+
+
 @app.route('/convert', methods=['GET'])
 def convert_file():
     url = request.args.get('url')
@@ -70,6 +72,8 @@ def convert_file():
                     "thumbnail_url": thumbnail_url,
                     "converted_file_url_obj": converted_file_url_obj,
                     "converted_file_url_ply": converted_file_url_ply})
+
+
 
 @app.route('/img2glb', methods=['POST'])
 def img2glb():
