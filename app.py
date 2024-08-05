@@ -20,6 +20,7 @@ def glb_to_png(glb_path, png_path):
         return None
 
 
+
 def generate_unique_filename(extension):
     random_prefix = random.randint(1000, 9999)
     return f"model_{random_prefix}.{extension}"

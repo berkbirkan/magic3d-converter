@@ -1,15 +1,14 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.9-slim
+# syntax=docker/dockerfile:1
 
-# Set the working directory
-WORKDIR /app
+FROM debian:stretch-slim
 
-# Install system dependencies for Chromium
-RUN apt-get update && apt-get install -y \
-    sudo \
-    wget \
-    gnupg \
-    gconf-service \
+# replace shell with bash so we can source files
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+# install dependencies
+RUN apt-get update \
+    && apt-get install -y \
+    curl \
     libasound2 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
@@ -20,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     libexpat1 \
     libfontconfig1 \
     libgcc1 \
-    libgconf-2.4-1 \
+    libgconf-2-4 \
     libgdk-pixbuf2.0-0 \
     libglib2.0-0 \
     libgtk-3-0 \
@@ -47,31 +46,46 @@ RUN apt-get update && apt-get install -y \
     libnss3 \
     lsb-release \
     xdg-utils \
-    && rm -rf /var/lib/apt/lists/*
+    wget \
+    chromium \
+    && apt-get -y autoclean
 
-# Install Chromium
-RUN apt-get update && apt-get install -y \
-    chromium
+# nvm environment variables (-> lts/gallium)
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 16.16.0
+RUN mkdir -p ${NVM_DIR}
 
-# Install Node.js and npm
-RUN apt-get update && apt-get install -y nodejs npm
+# install nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
-# Install screenshot-glb and Puppeteer
-RUN npm install -g @shopify/screenshot-glb
+RUN source ${NVM_DIR}/nvm.sh \
+    && nvm install ${NODE_VERSION} \
+    && nvm alias default ${NODE_VERSION} \
+    && nvm use default
 
-RUN npm i puppeteer
+# add node and npm to path so the commands are available
+ENV NODE_BASEDIR ${NVM_DIR}/versions/node/v${NODE_VERSION}
+ENV NODE_PATH ${NODE_BASEDIR}/lib/node_modules
+ENV PATH ${NODE_BASEDIR}/bin:$PATH
 
-# Copy the requirements.txt file to the container
-COPY requirements.txt requirements.txt
+# confirm installation
+RUN node -v
+RUN npm -v
 
-# Install the required Python packages
-RUN pip install --no-cache-dir -r requirements.txt
+# install screenshot-glb and puppeteer
+RUN npm install -g @shopify/screenshot-glb puppeteer
 
-# Copy the rest of the application to the container
+# specify puppeteer to use the installed Chromium
+RUN npx puppeteer install
+
+# setting up the cache directory for puppeteer
+ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
+
+# copy the rest of the application to the container
 COPY . .
 
-# Expose the port that the Flask app will run on
+# expose the port that the Flask app will run on
 EXPOSE 8889
 
-# Define the command to run the application
+# define the command to run the application
 CMD ["python", "app.py"]
