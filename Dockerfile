@@ -53,7 +53,9 @@ RUN apt-get update && \
     lsb-release \
     xdg-utils \
     wget \
-    chromium && \
+    chromium \
+    nodejs \
+    npm && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
