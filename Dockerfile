@@ -57,7 +57,9 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y nodejs npm
 
 # Install screenshot-glb and Puppeteer
-RUN npm install -g @shopify/screenshot-glb puppeteer
+RUN npm install -g @shopify/screenshot-glb
+
+RUN npm i puppeteer
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt requirements.txt
