@@ -11,14 +11,13 @@ UPLOAD_FOLDER = '/app/assets'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def glb_to_png(glb_path, png_path):
-    command = f"screenshot-glb -i {glb_path} -o {png_path} --chrome-executable-path=/usr/bin/chromium"
+    command = f"node /app/render_glb.js {glb_path} {png_path}"
     try:
         subprocess.run(command, shell=True, check=True)
         return png_path
     except subprocess.CalledProcessError as e:
         print(f"Error: {e}")
         return None
-
 
 
 def generate_unique_filename(extension):
