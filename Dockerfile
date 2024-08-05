@@ -61,8 +61,11 @@ RUN apt-get update && \
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install screenshot-glb
-RUN npm install -g screenshot-glb
+# Install puppeteer
+RUN npm install puppeteer
+
+# Copy the puppeteer script
+COPY render_glb.js /app/render_glb.js
 
 # Expose port 8889 for the Flask app
 EXPOSE 8889
