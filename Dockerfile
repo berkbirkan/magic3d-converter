@@ -48,6 +48,8 @@ RUN apt-get update \
     xdg-utils \
     wget \
     chromium \
+    python3 \
+    python3-pip \
     && apt-get -y autoclean
 
 # nvm environment variables (-> lts/gallium)
@@ -91,4 +93,4 @@ COPY . .
 EXPOSE 8889
 
 # define the command to run the application
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
