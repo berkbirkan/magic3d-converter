@@ -22,7 +22,6 @@ def glb_to_png(glb_path, png_path):
 def generate_unique_filename(extension):
     random_prefix = random.randint(1000, 9999)
     return f"model_{random_prefix}.{extension}"
-
 @app.route('/convert', methods=['GET'])
 def convert_file():
     url = request.args.get('url')
@@ -61,10 +60,11 @@ def convert_file():
 
     glb_to_png(temp_file_path, thumbnail_file_path)
 
-    converted_file_url = f"/assets/{output_file_name}"
-    converted_file_url_obj = f"/assets/{output_obj_file_name}"
-    converted_file_url_ply = f"/assets/{output_ply_file_name}"
-    thumbnail_url = f"/assets/{thumbnail_file_name}"
+    base_url = request.host_url.rstrip('/')
+    converted_file_url = f"{base_url}/assets/{output_file_name}"
+    converted_file_url_obj = f"{base_url}/assets/{output_obj_file_name}"
+    converted_file_url_ply = f"{base_url}/assets/{output_ply_file_name}"
+    thumbnail_url = f"{base_url}/assets/{thumbnail_file_name}"
     
     return jsonify({"converted_file_url": converted_file_url,
                     "thumbnail_url": thumbnail_url,
