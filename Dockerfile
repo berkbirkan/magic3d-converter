@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     libexpat1 \
     libfontconfig1 \
     libgcc1 \
-    libgconf-2-4 \
+    libgconf-2.4-1 \
     libgdk-pixbuf2.0-0 \
     libglib2.0-0 \
     libgtk-3-0 \
@@ -51,13 +51,9 @@ RUN apt-get update && apt-get install -y \
 # Install Node.js and npm
 RUN apt-get update && apt-get install -y nodejs npm
 
-# Set environment variable to skip downloading Chromium
-ENV PUPPETEER_SKIP_DOWNLOAD=true
-
 # Install screenshot-glb and the required Chromium version
 RUN npm install -g @shopify/screenshot-glb
-RUN npm install puppeteer@10.0.0
-RUN npx puppeteer install
+RUN npm install puppeteer
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt requirements.txt
