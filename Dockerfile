@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM debian:buster-slim
+FROM python:3.9-slim
 
 # replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
