@@ -42,8 +42,6 @@ def convert_file():
     output_ply_file_path = os.path.join(UPLOAD_FOLDER, output_ply_file_name)
     thumbnail_file_path = os.path.join(UPLOAD_FOLDER, thumbnail_file_name)
 
-
-
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -72,6 +70,54 @@ def convert_file():
                     "thumbnail_url": thumbnail_url,
                     "converted_file_url_obj": converted_file_url_obj,
                     "converted_file_url_ply": converted_file_url_ply})
+
+@app.route('/img2glb', methods=['POST'])
+def img2glb():
+    image_url = request.json.get('image_url')
+    api_key = request.json.get('stabilityai_api_key')
+    
+    if not image_url:
+        return jsonify({"error": "Image URL parameter is required."}), 400
+    
+    temp_image_name = generate_unique_filename('png')
+    output_file_name = generate_unique_filename('glb')
+    
+    temp_image_path = os.path.join(UPLOAD_FOLDER, temp_image_name)
+    output_file_path = os.path.join(UPLOAD_FOLDER, output_file_name)
+
+    try:
+        response = requests.get(image_url)
+        response.raise_for_status()
+        with open(temp_image_path, 'wb') as f:
+            f.write(response.content)
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading image: {e}")
+        return jsonify({"error": f"Could not download image from URL. {e}"}), 400
+
+    try:
+        api_response = requests.post(
+            f"https://api.stability.ai/v2beta/3d/stable-fast-3d",
+            headers={
+                "authorization": f"Bearer {api_key}" ,
+            },
+            files={
+                "image": open(temp_image_path, "rb")
+            },
+            data={},
+        )
+
+        if api_response.status_code == 200:
+            with open(output_file_path, 'wb') as file:
+                file.write(api_response.content)
+        else:
+            raise Exception(str(api_response.json()))
+    except Exception as e:
+        print(f"Error creating GLB: {e}")
+        return jsonify({"error": f"Could not create GLB from image. {e}"}), 500
+
+    converted_file_url = f"/assets/{output_file_name}"
+    
+    return jsonify({"converted_file_url": converted_file_url})
 
 @app.route('/assets/<path:filename>', methods=['GET'])
 def serve_file(filename):
