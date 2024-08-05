@@ -52,7 +52,7 @@ RUN apt-get update \
 
 # nvm environment variables (-> lts/gallium)
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 16.16.0
+ENV NODE_VERSION 18.17.0
 RUN mkdir -p ${NVM_DIR}
 
 # install nvm
@@ -71,6 +71,9 @@ ENV PATH ${NODE_BASEDIR}/bin:$PATH
 # confirm installation
 RUN node -v
 RUN npm -v
+
+# set puppeteer environment variables
+ENV PUPPETEER_SKIP_DOWNLOAD true
 
 # install screenshot-glb and puppeteer
 RUN npm install -g @shopify/screenshot-glb puppeteer
