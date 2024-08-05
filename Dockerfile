@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 # replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
