@@ -67,8 +67,9 @@ ENV PUPPETEER_SKIP_DOWNLOAD true
 # Install puppeteer
 RUN npm install puppeteer
 
-# Copy the puppeteer script
+# Ensure the puppeteer script and HTML file are copied
 COPY render_glb.js /app/render_glb.js
+COPY render.html /app/render.html
 
 # Expose port 8889 for the Flask app
 EXPOSE 8889
