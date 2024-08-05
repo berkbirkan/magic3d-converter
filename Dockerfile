@@ -61,6 +61,9 @@ RUN apt-get update && \
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Set environment variable to skip downloading Chromium
+ENV PUPPETEER_SKIP_DOWNLOAD true
+
 # Install puppeteer
 RUN npm install puppeteer
 

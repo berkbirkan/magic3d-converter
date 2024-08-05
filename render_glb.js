@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 
 async function renderGLB(glbPath, pngPath) {
     const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/chromium',  // Ensure Puppeteer uses system Chromium
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
