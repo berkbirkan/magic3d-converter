@@ -4,6 +4,8 @@ import requests
 import os
 import random
 import subprocess
+from PIL import Image
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -93,11 +95,29 @@ def img2glb():
     try:
         response = requests.get(image_url)
         response.raise_for_status()
-        with open(temp_image_path, 'wb') as f:
-            f.write(response.content)
+        
+        image = Image.open(BytesIO(response.content))
+        width, height = image.size
+        pixel_count = width * height
+        
+        if pixel_count < 4096 or pixel_count > 4194304:
+            max_dimension = int((4194304 ** 0.5))  # Calculate max dimension to fit within 4,194,304 pixels
+            if width * height > 4194304:
+                scale_factor = (max_dimension ** 2 / pixel_count) ** 0.5
+                new_width = int(width * scale_factor)
+                new_height = int(height * scale_factor)
+                image = image.resize((new_width, new_height), Image.ANTIALIAS)
+            elif width * height < 4096:
+                return jsonify({"error": "Image dimensions are too small. Minimum dimension is 4096 pixels."}), 400
+
+        image.save(temp_image_path, 'PNG')
+        
     except requests.exceptions.RequestException as e:
         print(f"Error downloading image: {e}")
         return jsonify({"error": f"Could not download image from URL. {e}"}), 400
+    except Exception as e:
+        print(f"Error processing image: {e}")
+        return jsonify({"error": f"Could not process image. {e}"}), 500
 
     try:
         api_response = requests.post(
