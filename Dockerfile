@@ -86,6 +86,10 @@ RUN npx puppeteer install
 # setting up the cache directory for puppeteer
 ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
 
+# install python dependencies
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
 # copy the rest of the application to the container
 COPY . .
 
