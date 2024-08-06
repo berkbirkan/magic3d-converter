@@ -5,7 +5,7 @@ import os
 import random
 import subprocess
 from PIL import Image
-from io import BytesIO_
+from io import BytesIO
 
 app = Flask(__name__)
 
