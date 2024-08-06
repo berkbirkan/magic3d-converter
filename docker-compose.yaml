@@ -1,9 +1,16 @@
 version: '3.8'
 
 services:
-  flask-app:
+  web:
     build: .
     ports:
       - "8889:8889"
     volumes:
-      - ./assets:/app/assets
+      - .:/app
+    environment:
+      - UPLOAD_FOLDER=/app/assets
+
+  gltf-viewer:
+    image: bwasty/gltf-viewer
+    volumes:
+      - ./assets:/input
