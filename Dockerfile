@@ -20,4 +20,4 @@ RUN apt-get update && apt-get install -y \
 RUN chmod +x /app/screenshot_docker.sh
 
 # Run app.py when the container launches
-CMD ["python", "app.py"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8889"]
