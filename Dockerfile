@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0
 
+# Make screenshot_docker.sh executable
+RUN chmod +x /app/screenshot_docker.sh
+
 # Run app.py when the container launches
 CMD ["python", "app.py"]
-
