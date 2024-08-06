@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Set environment variable
-ENV FLASK_APP=app.py
+ENV FLASK_APP=app:app
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
