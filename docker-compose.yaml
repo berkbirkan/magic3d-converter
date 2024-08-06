@@ -9,6 +9,7 @@ services:
       - .:/app
     environment:
       - UPLOAD_FOLDER=/app/assets
+      - FLASK_APP=app.py
 
   gltf-viewer:
     image: bwasty/gltf-viewer
