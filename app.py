@@ -5,7 +5,7 @@ import os
 import random
 import subprocess
 from PIL import Image
-from io import BytesIO
+from io import BytesIO_
 
 app = Flask(__name__)
 
@@ -13,13 +13,14 @@ UPLOAD_FOLDER = '/app/assets'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def glb_to_png(glb_path, png_path):
-    command = f"node /app/render_glb.js {glb_path} {png_path}"
+    command = f"DOCKER_IMAGE=bwasty/gltf-viewer ./screenshot_docker.sh {glb_path}"
     try:
         subprocess.run(command, shell=True, check=True)
         return png_path
     except subprocess.CalledProcessError as e:
         print(f"Error: {e}")
         return None
+
 
 
 def generate_unique_filename(extension):
