@@ -24,7 +24,9 @@ else
  image=gltf-viewer
 fi
 
-rm "$output_file" || true
+rm -f "$output_file" || true
 
 docker run -t --rm -v "$(pwd)/$gltf_dir:/input" \
  $image "/input/$gltf_file" -s "/input/$model_name.png" "${@:2}"
+
+[ -f "$HOME/.iterm2/imgcat" ] && "$HOME/.iterm2/imgcat" "$output_file"

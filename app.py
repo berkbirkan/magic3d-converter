@@ -13,7 +13,7 @@ UPLOAD_FOLDER = '/app/assets'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def glb_to_png(glb_path, png_path):
-    command = f"DOCKER_IMAGE=bwasty/gltf-viewer ./screenshot_docker.sh {glb_path}"
+    command = f"DOCKER_IMAGE=bwasty/gltf-viewer ./screenshot_docker.sh {glb_path} -s {png_path} --width 800 --height 600 --cam-fovy 75 --cam-index 0 --count 1 --scene 0"
     try:
         subprocess.run(command, shell=True, check=True)
         return png_path
